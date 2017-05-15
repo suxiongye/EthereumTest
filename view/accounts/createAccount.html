@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account</title>
+</head>
+<body ng-app="app" ng-controller="accounts">
+<div>
+    <label>Input the password of the account:</label>
+    <input value="account password" ng-model="accountPassword">
+    <p>{{createAccountStatus}}</p>
+    <p>{{newAccountAddress}}</p>
+</div>
+<button ng-click="createAccount()">createAccounts</button>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/accounts.js"></script>
+</html>

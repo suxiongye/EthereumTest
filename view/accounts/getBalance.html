@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Balance</title>
+</head>
+<body ng-app="app" ng-controller="accounts">
+<div ng-show="accounts.length > 0">
+    <label>选择需要查询的账户：</label>
+    <select ng-init="selectedAccount = accounts[0]" ng-model="selectedAccount"
+            ng-options="account for account in accounts " ng-change="getBalance()">
+    </select>
+    <p>{{balance}} Ether</p>
+</div>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/accounts.js"></script>
+</html>

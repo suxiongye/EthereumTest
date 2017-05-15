@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account List</title>
+</head>
+<body ng-app="app" ng-controller="accounts">
+<div ng-repeat="account in accounts">
+    <p>{{account}}</p>
+</div>
+<button ng-click="getAccounts()">getAccounts</button>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/accounts.js"></script>
+</html>
