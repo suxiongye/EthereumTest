@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Data</title>
+</head>
+<body ng-app="app" ng-controller="search">
+<label>Search By Data Name</label>
+<input ng-model="dataName">
+<hr>
+<label>Data Provider</label>
+<p>{{dataProvider}}</p>
+<hr>
+<label>Data Introduction</label>
+<p>{{introduction}}</p>
+<hr>
+<button ng-click="searchDataByName()">Search Data By Name</button>
+<hr>
+<label>Search By Data Type</label>
+<hr>
+<label>Type Level 1</label>
+<input ng-model="type_level1">
+<hr>
+<label>Type Level 2</label>
+<input ng-model="type_level2">
+<hr>
+<table>
+    <thead>
+    <tr>
+        <td>Data Name</td>
+        <td>Provider</td>
+        <td>Introduction</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="dataSet in dataSets">
+        <td>{{dataSet.dataName}}</td>
+        <td>{{dataSet.provider}}</td>
+        <td>{{dataSet.introduction}}</td>
+    </tr>
+    </tbody>
+</table>
+<button ng-click="searchDataByType()">Search Data By Type</button>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/search.js"></script>
+</html>

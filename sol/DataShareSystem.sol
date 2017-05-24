@@ -82,10 +82,19 @@ contract DataShareSystem{
     
     /** 请求数据 */
     function requestData(bytes32 dataName){
+         if(requester.length == 0){
+             req = new Request(msg.sender,dataName,drc);
+             req_reqAddr[msg.sender] = req;
+             req.request(dataName);
+             requester.push(msg.sender);
+             return;
+        }
+
         for(uint i = 0 ; i < requester.length ; i++){
             if(msg.sender == requester[i]){
                 req = Request(req_reqAddr[msg.sender]);
                 req.request(dataName);
+                return;
             }
         }
         req = new Request(msg.sender,dataName,drc);
@@ -95,151 +104,209 @@ contract DataShareSystem{
 //        requester_requestList[msg.sender] = req;
 //        requester.push(msg.sender);
     }
-    
-    
-}  
+
+
+}
 
 
 
 contract DataRegister{
-   
+
    /**
     * 数据注册合约
-    * 
-    * 
+    *
+    *
     */
-   
+
    //数据 => 提供者地址
    mapping(bytes32 => address) public data_provide;
- 
+
    mapping(bytes32 => address) public DPAddress;
-  
+
    mapping(bytes32 => address) public DRAddress;
    //mapping(bytes32 => address) public DTAddress;
    //mapping(bytes32 => mapping(address => address)) public DAAddress;
-   
-   
+
+   bytes32[] public dataNameArray;
+   uint public dnaLength;
+
+
+   bool isExist = false;
+
+
    /** 注册 */
    function register(bytes32 dataName,bytes32 introductionName,string introductionValue,address provider){
        data_provide[dataName] = provider;
        DataProfile dataProfile = new DataProfile(dataName);
        DPAddress[dataName] = dataProfile;
        dataProfile.addIntroduction(introductionName,introductionValue);
+       if (dataNameArray.length == 0){
+           dataNameArray.push(dataName);
+           dnaLength = dataNameArray.length;
+       } else {
+           for (uint i=0;i<dataNameArray.length;i++){
+               if(dataNameArray[i] == dataName){
+                   isExist = true;
+                   break;
+               }
+           }
+
+           if(isExist == false){
+
+           dataNameArray.push(dataName);
+           dnaLength = dataNameArray.length;
+           }
+       }
+
+
        DataRequester dataRequester = new DataRequester(dataName);
        DRAddress[dataName] = dataRequester;
-      
-      
+
+
    }
-   
+
    function getDRAddress(bytes32 dataName) returns(address drec){
        drec = DRAddress[dataName];
    }
-   
+
    function getDPAddress(bytes32 dataName) returns(address dp){
        dp = DPAddress[dataName];
    }
-   
+
    function getProvider(bytes32 dataName) returns(address providerAddr){
        providerAddr = data_provide[dataName];
    }
-   
-  
-   
+
+
+
 }
 
 contract DataProfile  {
-   
+
    /**
     * 数据详情合约
     * 数据详情的增删改查
-    * 
+    *
     */
-   
+
     mapping(bytes32 => string) public introductions;
+    bytes32[] public introName;
+    uint public introNameLength;
     DataRegister dr;
     bytes32 dataName;
-    
-   
-    
+
+
+
     function DataProfile(bytes32 name){
         dr = DataRegister(msg.sender);
         dataName = name;
-        
+
     }
-    
-    
-    
+
+
+
     function addIntroduction(bytes32 introductionName,string introductionValue){
         introductions[introductionName] = introductionValue;
+        introName.push(introductionName);
+        introNameLength = introName.length;
     }
-    
+
     function getIntroduction(bytes32 introductionName) returns(string introValue){
         introValue = introductions[introductionName];
     }
-    
+
     function updateIntroduction(bytes32 introductionName,string introductionValue) {
         introductions[introductionName] = introductionValue;
     }
-    
+
     function deleteIntroduction(bytes32 introductionName)  {
-        delete introductions[introductionName];
+    	if(introName.length ==0) throw;
+
+        for(uint i=0;i<introName.length;i++){
+            if(introName[i] == introductionName){
+                for(uint j=i;j<introName.length;j++){
+                    introName[j] = introName[j+1];
+                    delete introName[introName.length-1];
+                    delete introductions[introductionName];
+                    introNameLength = introName.length;
+                    return;
+                }
+            }
+            throw;
+        }
     }
-    
+
 }
 
 contract DataRequester  {
-   
+
    /**
     * 数据请求者合约
     * 数据提供者对请求者的相关操作
-    * 
+    *
     */
    enum AuthorityType {Nothing,OnlyRead,Download}
    AuthorityType constant defaultAuthorityType = AuthorityType.Nothing;
-   
- 
+
+
    mapping(address => uint) public dataRequester;
    DataRegister public dr;
    address public providerAddress;
    bytes32 public dataName;
-   
+
    function DataRequester(bytes32 name){
        dr = DataRegister(msg.sender);
        providerAddress = dr.getProvider(name);
        dataName = name;
    }
-   
- 
-   
+
+
+
    function addRequester(address requester)  {
        dataRequester[requester] = 0;
    }
-   
+
    function setAuthority(address requester,uint index)  {
       dataRequester[requester] = index;
    }
-    
+
 }
 
 contract DataType1 {
-    
+
     /**
      * 数据一级Type合约
      * 数据Type相关操作
-     * 
+     *
      */
     bytes32[] public type1;
     bytes32[] public type2;
-    
+
     DataType2 public dt2;
-    
-  
-    
+
+
+
     mapping(bytes32 => mapping(bytes32 => address)) public DT2Address;
-    
+
     function addType(bytes32 dataName,bytes32 level1,bytes32 level2){
+    	if(type1.length == 0){
+            type1.push(level1);
+            dt2 = new DataType2();
+            DT2Address[level1][level2] = dt2;
+            dt2.addType2(level2,dataName);
+            return;
+        }
+
         for(uint i = 0;i < type1.length;i++){
             if(type1[i] == level1){
+            	if(type2.length == 0){
+                    dt2 = new DataType2();
+                    dt2.addType2(level2,dataName);
+                    DT2Address[level1][level2] = dt2;
+                    type2.push(level2);
+                    return;
+                }
+
                 for(uint j = 0 ; j < type2.length ; j++){
                     if(type2[j] == level2){
                     dt2 = DataType2(DT2Address[level1][level2]);
@@ -259,55 +326,64 @@ contract DataType1 {
         DT2Address[level1][level2] = dt2;
         dt2.addType2(level2,dataName);
     }
-   
-    
 
-} 
+
+
+}
 
 contract DataType2 {
-    
-   
+
+
     bytes32[] public dataSet;
     mapping(bytes32 => bytes32[]) public DT2_Data;
-    
+
     function addType2(bytes32 level2,bytes32 dataName){
        dataSet.push(dataName);
        DT2_Data[level2] = dataSet;
-        
-    }
-    
-    
 
-} 
+    }
+
+
+
+}
 
 contract Request{
-    
+
     /**
      * 数据请求合约
-     * 
-     * 
+     *
+     *
      */
     mapping(bytes32 => uint) public requestStatus;
     bytes32[] public data;
+    uint public dataLength;
+
     address requester;
     bytes32 dataName;
     DataRegister dr;
-    
+
     function Request(address request,bytes32 name,address drec){
         dr = DataRegister(drec);
         requester = request;
         dataName = name;
     }
-      
-   
-    
+
+
+
     function request(bytes32 dataName){
+    	 if(data.length == 0){
+            requestStatus[dataName] = 0;
+            data.push(dataName);
+            dataLength = data.length;
+            return;
+         }
+
         for(uint i = 0 ; i < data.length ; i++){
             if(data[i] == dataName) throw;
-            return;
         }
         requestStatus[dataName] = 0;
         data.push(dataName);
+        dataLength = data.length;
     }
     
     

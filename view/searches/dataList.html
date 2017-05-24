@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data List</title>
+</head>
+<body ng-app="app" ng-controller="data">
+<table>
+    <thead>
+    <tr>
+        <td>Data Name</td>
+        <td>Introduction</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="dataSet in dataSets">
+        <td>{{dataSet.dataName}}</td>
+        <td>{{dataSet.introduction}}</td>
+    </tr>
+    </tbody>
+</table>
+<button ng-click="getDatas()">getData</button>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/data.js"></script>
+</html>
