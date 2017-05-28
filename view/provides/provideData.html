@@ -11,13 +11,18 @@ Choose the provider:
 </select>
 <hr/>
 DataName:
-<input ng-model="dataName">
+<input ng-model="dataName" ng-change="checkDataNameExist()">{{nameError}}
 <hr/>
-Type Level 1:
-<input ng-model="type_level1">
-<hr/>
-Type Level 2:
-<input ng-model="type_level2">
+<div ng-repeat="type in types">
+    Type Key {{$index}}:
+    <input ng-model="type.key">
+    <hr/>
+    Type Value {{$index}}:
+    <input ng-model="type.value">
+    <hr/>
+</div>
+<button ng-click="addType()">Add Type</button>
+<button ng-click="removeType()">Remove Type</button>
 <hr/>
 Introdcution:
 <textarea ng-model="introduction"></textarea>

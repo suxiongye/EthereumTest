@@ -2,47 +2,77 @@
  * Created by su on 2017/5/20.
  */
 angular.module("app", []).controller("search", function ($scope) {
-    //重置函数
-    $scope.reset = function () {
-        $scope.dataName = "";
-        $scope.dpAddress = "";
-        $scope.dataProvider = "";
-        $scope.introduction = "";
-    }
-    
+    $scope.dataSets = [];
+    /**
+     * 根据名字搜索数据详细信息
+     */
     $scope.searchDataByName = function () {
-        //获取数据合约
-        var dpContract = web3.eth.contract(abiDataProfile);
-
-        //若不输入字符串
-        if (typeof ($scope.dataName) == "undefined") {
-            alert("Please input the data name first!");
-            $scope.reset();
+        if(!$scope.dataName){
+            alert("Please input the data name!");
             return;
         }
-        //转换名字编码
-        var dataName = web3.fromAscii($scope.dataName);
-        //获取数据合约
-        $scope.dpAddress = drcContractInstance.DPAddress.call(dataName);
-
-        //若找不到数据
-        if (parseInt($scope.dpAddress) == 0) {
-            alert("Can not find the data!");
-            $scope.reset();
+        //检查数据名称是否存在
+        if (!contractInstance.isDataNameExist.call($scope.dataName)) {
+            alert("Can't find the data!");
             return;
         }
-
-        //取出数据详情
-        var dpContractInstance = dpContract.at($scope.dpAddress);
-        //数据提供者
-        $scope.dataProvider=drcContractInstance.data_provide.call($scope.dataName);
-        //获取数据具体信息
-        //默认取出数组第一个值
-        var introName = dpContractInstance.introName.call();
-        $scope.introduction = dpContractInstance.introductions.call(introName);
+        $scope.data = [];
+        //若存在则显示详细信息
+        var dataObjectInstance = dataContract.at(contractInstance.getDataAddressByDataName.call($scope.dataName));
+        //获取数据名称
+        $scope.data.dataName = web3.toAscii(dataObjectInstance.dataName());
+        //获取对象介绍
+        $scope.data.introduction = dataObjectInstance.introduction();
+        //获取对象类型
+        $scope.data.types = [];
+        for (var j = 0; j < dataObjectInstance.typeNum().toNumber(); j++) {
+            //循环添加类型
+            var type = [];
+            type.key = web3.toAscii(dataObjectInstance.dataTypes(j)[0]);
+            type.value = web3.toAscii(dataObjectInstance.dataTypes(j)[1]);
+            $scope.data.types.push(type);
+        }
+        $scope.data.provider = dataObjectInstance.provider();
     };
 
+    /**
+     * 根据类型搜索数据
+     */
     $scope.searchDataByType = function () {
-        alert("not finish yet");
+        if(!$scope.type_key || !$scope.type_value){
+            alert("Please input the type key and value!");
+            return;
+        }
+        $scope.dataSets = [];
+
+        //获取类型对象合约
+        var typeAddress = contractInstance.getTypeAddressByName.call($scope.type_key, $scope.type_value);
+        var typeObjectInstance = typeContract.at(typeAddress);
+        var dataNum = typeObjectInstance.dataNum().toNumber();
+        if(dataNum == 0){
+            alert("Can't find the data set!");
+            return;
+        }
+
+        //循环获取数据并显示
+        for(var i = 0; i < dataNum; i++){
+            //获取数据对象合约
+            var dataObjectInstance = dataContract.at(typeObjectInstance.dataSets.call(i));
+            var data = [];
+            //获取数据名称
+            data.dataName = web3.toAscii(dataObjectInstance.dataName());
+            //获取对象介绍
+            data.introduction = dataObjectInstance.introduction();
+            //获取对象类型
+            data.types = [];
+            for (var j = 0; j < dataObjectInstance.typeNum().toNumber(); j++) {
+                //循环添加类型
+                var type = [];
+                type.key = web3.toAscii(dataObjectInstance.dataTypes(j)[0]);
+                type.value = web3.toAscii(dataObjectInstance.dataTypes(j)[1]);
+                data.types.push(type);
+            }
+            $scope.dataSets.push(data);
+        }
     };
 });

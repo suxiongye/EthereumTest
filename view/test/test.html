@@ -6,25 +6,14 @@
 </head>
 <body ng-app="app" ng-controller="test">
 Test
-<select ng-init="selectedAccount = accounts[0]" ng-model="selectedAccount"
-        ng-options="account for account in accounts ">
-</select>
-<hr/>
-DataName:
-<input ng-model="dataName">
-<hr/>
-Type Level 1:
-<input ng-model="type_level1">
-<hr/>
-Type Level 2:
-<input ng-model="type_level2">
-<hr/>
-Introdcution:
-<textarea ng-model="introduction"></textarea>
-<hr/>
-Password: <input ng-model="password" type="password">
-<hr/>
-<button ng-click="provideData()">Provide Data</button>
+<div ng-repeat="item in items">
+    <label>Type Key</label>
+    <input ng-model="item.key">
+    <label>Type Value</label>
+    <input ng-model="item.value">
+</div>
+<button ng-click="add()">Add</button>
+<button ng-click="remove()">Remove</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>

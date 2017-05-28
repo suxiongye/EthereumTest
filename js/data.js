@@ -2,31 +2,35 @@
  * Created by su on 2017/5/18.
  */
 angular.module("app", []).controller("data", function ($scope) {
+    $scope.dataSets = [];
+
+    //获取数据
     $scope.getDatas = function () {
-        //获取数据数目
-        var dataSetNum = drcContractInstance.dnaLength.call().toNumber();
-
-        //获取数据合约
-        var dpContract = web3.eth.contract(abiDataProfile);
-
-        //遍历数据，存入数组
         $scope.dataSets = [];
+        //获取数据数目
+        var dataSetNum = contractInstance.getDataNum.call().toNumber();
+        //逐个获取数据对象
         for (var i = 0; i < dataSetNum; i++) {
+            //获取数据对象合约
+            var dataObjectInstance = dataContract.at(contractInstance.getDataAddressByIndex.call(i));
             var dataSet = [];
-            //获取名字
-            var dataName = drcContractInstance.dataNameArray.call(i);
-            dataSet.dataName = web3.toAscii(dataName);
-            //获取数据合约
-            dataSet.address = drcContractInstance.DPAddress.call(dataName);
-            var dpContractInstance = dpContract.at(dataSet.address);
-
-            //获取数据具体信息
-            //默认取出数组第一个值
-            var introName = dpContractInstance.introName.call();
-            dataSet.introduction = dpContractInstance.introductions.call(introName);
-            //存入数组
+            //获取对象名称
+            dataSet.dataName = web3.toAscii(dataObjectInstance.dataName());
+            //获取对象介绍
+            dataSet.introduction = dataObjectInstance.introduction();
+            //获取对象类型
+            dataSet.types = [];
+            for(var j = 0; j < dataObjectInstance.typeNum().toNumber(); j++){
+                //循环添加类型
+                var type = [];
+                type.key = web3.toAscii(dataObjectInstance.dataTypes(j)[0]);
+                type.value = web3.toAscii(dataObjectInstance.dataTypes(j)[1]);
+                dataSet.types.push(type);
+            }
+            //获取数据提供者
+            dataSet.provider = dataObjectInstance.provider();
+console.log(contractInstance.getDataAddressByIndex.call(i));
             $scope.dataSets.push(dataSet);
         }
-
     };
 });

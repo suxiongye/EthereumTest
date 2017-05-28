@@ -26,7 +26,7 @@ angular.module("app", []).controller("accounts", function ($scope) {
      */
     $scope.createAccount = function () {
 
-        if (web3.personal.newAccount("$scope.accountPassword")) {
+        if (web3.personal.newAccount($scope.accountPassword)) {
             $scope.createAccountStatus = "create success";
             $scope.newAccountAddress = web3.eth.accounts[web3.eth.accounts.length - 1];
         } else {
