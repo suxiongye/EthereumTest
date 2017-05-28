@@ -297,8 +297,9 @@ var abiTypeObject = [{
  * 功能：负责记录对应数据对象的权限控制信息
  * 可访问变量：
  * accessList(address=>accessType) —— 根据请求者地址返回权限类型
- * requestList[] —— 根据下标获取请求者地址
- * requestNum —— 返回请求者数量
+ * requesterList[] —— 根据下标获取请求者地址
+ * requesterNum —— 返回请求者数量
+ * provider —— 返回数据提供者地址
  *
  * 可调用函数：
  * isRequestExist(address requester) —— 返回请求者是否请求过该数据(bool)
@@ -388,6 +389,9 @@ var dataContract = web3.eth.contract(abiDataObject);
 var typeContract = web3.eth.contract(abiTypeObject);
 var accessContract = web3.eth.contract(abiAccessObject);
 
+//设置权限数组
+var accessType = ["Init", "Pending", "Reject", "Confirm"];
+
 angular.module("app", []).controller("config", function ($scope) {
-    // managementContractAddress = $scope.contractAddress;
+
 });

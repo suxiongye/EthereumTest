@@ -124,7 +124,11 @@ angular.module("app", []).controller("provide", function ($scope) {
             }
             $scope.dataSets.push(dataSet);
         }
+        //设置默认名称
+        if(provideNum > 0) $scope.selectedData = $scope.dataSets[0].dataName;
     };
 
+    $scope.getDataRequestList = function () {
 
+    };
 });
