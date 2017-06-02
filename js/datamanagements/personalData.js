@@ -54,7 +54,7 @@ angular.module("app", []).controller("personalData", function ($scope) {
             data.dataName = web3.toAscii(contractInstance.getRequestDataNameByIndex.call($scope.selectedAccount, i));
             //获取对应名称的权限合约
             var accessContractInstance = accessContract.at(contractInstance.getDataAccessByName.call(data.dataName));
-            data.provider = accessContractInstance.provider();
+            data.provider = getUserNameByAddress(accessContractInstance.provider());
             //获取当前状态
             data.status = accessType[accessContractInstance.accessList($scope.selectedAccount)];
             //存入数据

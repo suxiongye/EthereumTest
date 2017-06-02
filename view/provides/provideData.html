@@ -6,8 +6,8 @@
 </head>
 <body ng-app="app" ng-controller="provide">
 Choose the provider:
-<select ng-init="selectedAccount = accounts[0]" ng-model="selectedAccount"
-        ng-options="account for account in accounts ">
+<select ng-model="selectedAccount"
+        ng-options="account.userName as account.userName for account in accounts ">
 </select>
 <hr/>
 DataName:

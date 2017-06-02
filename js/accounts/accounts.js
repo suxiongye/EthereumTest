@@ -17,7 +17,12 @@ angular.module("app", []).controller("accounts", function ($scope) {
      */
     $scope.getAccounts = function () {
         $scope.accounts = web3.eth.accounts;
-    }
+    };
+
+    $scope.getRegisterAccounts = function () {
+        $scope.registerAccounts = getRegisterAccounts();
+
+    };
 
     /**
      * 创建新账户
@@ -56,6 +61,58 @@ angular.module("app", []).controller("accounts", function ($scope) {
             to: $scope.selectedAccountTo,
             value: web3.toWei($scope.chargeEthers)
         });
+    };
+
+    /**
+     * 进行账户注册
+     * param
+     */
+    $scope.registerAccount = function () {
+        //解锁账户
+        if (!unlockEtherAccount($scope.selectedAccount, $scope.password)) return;
+        //如果用户已经注册，返回
+        if (isTheUserAddressRegister($scope.selectedAccount)) {
+            alert("用户已注册！");
+            return;
+        }
+        //判断用户名是否合法，若存在则返回
+        if (!$scope.isUserNameLegal()) {
+            alert("用户姓名不合法");
+            return;
+        }
+        //判断账户是否小于0.1 ether
+        if (web3.fromWei(web3.eth.getBalance($scope.selectedAccount), 'ether') < 0.1) {
+            alert("余额不足！");
+            return;
+        }
+        //发送注册请求
+        try {
+            contractInstance.registerUser($scope.userName, {
+                from: $scope.selectedAccount,
+                gas: 80000000
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    /**
+     * 判断用户名是否合法，包括是否已经存在及为空
+     * @returns {boolean}
+     */
+    $scope.isUserNameLegal = function () {
+        if (contractInstance.isUserNameExist.call($scope.userName)) {
+            $scope.nameError = "User name is exist";
+            return false;
+        }
+        else {
+            if (!$scope.userName) {
+                $scope.nameError = "Please input user name.";
+                return false;
+            }
+        }
+        $scope.nameError = "";
+        return true;
     };
 });
 

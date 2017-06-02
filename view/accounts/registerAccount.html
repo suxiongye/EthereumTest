@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Account</title>
+</head>
+<body ng-app="app" ng-controller="accounts">
+<label>账户地址：</label>
+<select ng-init="selectedAccount = accounts[0]" ng-model="selectedAccount"
+        ng-options="account for account in accounts ">
+</select>
+<p>注册名称：</p>
+<input ng-model="userName" ng-change="isUserNameLegal()">
+{{nameError}}
+<p>密码：</p>
+<input value="unlock password" ng-model="password" type="password">
+<button ng-click="registerAccount()">Register</button>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script src="../../js/configs/config.js"></script>
+<script type="text/javascript" src="../../js/accounts/accounts.js"></script>
+</html>

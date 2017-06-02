@@ -20,7 +20,7 @@ angular.module("app", []).controller("data", function ($scope) {
             dataSet.introduction = dataObjectInstance.introduction();
             //获取对象类型
             dataSet.types = [];
-            for(var j = 0; j < dataObjectInstance.typeNum().toNumber(); j++){
+            for (var j = 0; j < dataObjectInstance.typeNum().toNumber(); j++) {
                 //循环添加类型
                 var type = [];
                 type.key = web3.toAscii(dataObjectInstance.dataTypes(j)[0]);
@@ -28,8 +28,7 @@ angular.module("app", []).controller("data", function ($scope) {
                 dataSet.types.push(type);
             }
             //获取数据提供者
-            dataSet.provider = dataObjectInstance.provider();
-console.log(contractInstance.getDataAddressByIndex.call(i));
+            dataSet.provider = getUserNameByAddress(dataObjectInstance.provider());
             $scope.dataSets.push(dataSet);
         }
     };

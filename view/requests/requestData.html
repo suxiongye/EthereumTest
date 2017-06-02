@@ -7,14 +7,18 @@
 <body ng-app="app" ng-controller="request">
 <div ng-show="accounts.length > 0">
     <label>请求者账户：</label>
-    <select ng-init="selectedAccount = accounts[0]" ng-model="selectedAccount"
-            ng-options="account for account in accounts ">
+    <select ng-model="selectedAccount"
+            ng-options="account.userName as account.userName for account in accounts ">
     </select>
 </div>
 <div>
     <label>数据名称：</label>
-    <input ng-model="dataName" ng-change="isDataExist()">
+    <input ng-model="dataName" ng-change="isDataLegal()">
     {{nameError}}
+    <hr/>
+    <label>请求备注：</label>
+    <input ng-model="information" ng-change="isDataLegal()">{{infoError}}
+
 </div>
 <label>Password：</label>
 <input ng-model="password">

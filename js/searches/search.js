@@ -32,7 +32,7 @@ angular.module("app", []).controller("search", function ($scope) {
             type.value = web3.toAscii(dataObjectInstance.dataTypes(j)[1]);
             $scope.data.types.push(type);
         }
-        $scope.data.provider = dataObjectInstance.provider();
+        $scope.data.provider = getUserNameByAddress(dataObjectInstance.provider());
     };
 
     /**

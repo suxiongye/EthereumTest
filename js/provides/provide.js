@@ -3,10 +3,20 @@
  */
 angular.module("app", []).controller("provide", function ($scope) {
     //账户部分初始化
-    //初始取出账户
-    $scope.accounts = web3.eth.accounts;
+    //初始取出已注册的账户
+    $scope.accounts = getRegisterAccounts();
     $scope.types = [{key: "", value: ""}];
     $scope.dataSets = [];
+
+    /**
+     * 页面加载完后自动显示第一个用户名
+     */
+    $scope.$watch('$viewContentLoaded', function () {
+        if ($scope.accounts.length > 0) {
+            $scope.selectedAccount = $scope.accounts[0].userName;
+        }
+    });
+
     /**
      * 创建数据
      */
@@ -36,24 +46,18 @@ angular.module("app", []).controller("provide", function ($scope) {
             return;
         }
         //解锁账户
-        try {
-            web3.personal.unlockAccount($scope.selectedAccount, $scope.password);
-        } catch (err) {
-            console.log(err);
-            alert("You haven't connect to ethereum or the password cannot match the account!");
-            return;
-        }
+        if (!unlockEtherAccount(getUserAddressByName($scope.selectedAccount), $scope.password)) return;
         //添加数据
         try {
             //添加数据源
             contractInstance.createData($scope.dataName, $scope.introduction, {
-                from: $scope.selectedAccount,
+                from: getUserAddressByName($scope.selectedAccount),
                 gas: 80000000
             });
             //添加数据类型
             for (var i = 0; i < $scope.types.length; i++) {
                 contractInstance.addTypeToData($scope.types[i].key, $scope.types[i].value, $scope.dataName, {
-                    from: $scope.selectedAccount,
+                    from: getUserAddressByName($scope.selectedAccount),
                     gas: 80000000
                 });
             }
@@ -62,10 +66,6 @@ angular.module("app", []).controller("provide", function ($scope) {
             return;
         }
     };
-
-    $scope.showProvideList = function () {
-
-    }
 
     /**
      * 增加类型控件
@@ -104,11 +104,11 @@ angular.module("app", []).controller("provide", function ($scope) {
     $scope.getProvideData = function () {
         $scope.dataSets = [];
         //获取提供者提供的数据总数
-        var provideNum = contractInstance.getDataNumByProvider.call($scope.selectedAccount).toNumber();
+        var provideNum = contractInstance.getDataNumByProvider.call(getUserAddressByName($scope.selectedAccount)).toNumber();
         //逐个获取数据对象
         for (var i = 0; i < provideNum; i++) {
             var dataSet = [];
-            dataSet.dataName = web3.toAscii(contractInstance.getProvideDataNameByIndex.call($scope.selectedAccount, i));
+            dataSet.dataName = web3.toAscii(contractInstance.getProvideDataNameByIndex.call(getUserAddressByName($scope.selectedAccount), i));
             //根据数据名称获取数据对象合约
             var dataObjectInstance = dataContract.at(contractInstance.getDataAddressByDataName.call(dataSet.dataName));
             //获取对象介绍
@@ -125,10 +125,6 @@ angular.module("app", []).controller("provide", function ($scope) {
             $scope.dataSets.push(dataSet);
         }
         //设置默认名称
-        if(provideNum > 0) $scope.selectedData = $scope.dataSets[0].dataName;
-    };
-
-    $scope.getDataRequestList = function () {
-
+        if (provideNum > 0) $scope.selectedData = $scope.dataSets[0].dataName;
     };
 });
