@@ -31,15 +31,19 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="requester in requesters" render-finish>
+    <tr ng-repeat="requester in requesters">
         <td>{{requester.userName}}</td>
         <td>{{requester.information}}</td>
         <td>{{requester.status}}</td>
         <td>
-            <button ng-click="confirmData(selectedData,requester.address)">Confirm</button>
+            <button ng-click="confirmData(selectedData,requester.address)" ng-disabled="requester.control_disable">
+                Confirm
+            </button>
         </td>
         <td>
-            <button ng-click="rejectData(selectedData,requester.address)">Reject</button>
+            <button ng-click="rejectData(selectedData,requester.address)" ng-disabled="requester.control_disable">
+                Reject
+            </button>
         </td>
     </tr>
     </tbody>

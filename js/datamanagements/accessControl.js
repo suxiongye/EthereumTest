@@ -71,8 +71,8 @@ angular.module("app", []).controller("provideCtrl", function ($scope) {
             requester.information = requestContractInstance.information();
             //获取请求者对应请求地址的权限
             requester.status = accessType[accessContractInstance.accessList(accessContractInstance.requestList(requester.address))];
-            //设置是否能够操作权限
-            
+            //设置是否能够操作权限，已审计则不能操作，返回true
+            requester.control_disable = isDataAudited($scope.selectedData, requester.address);
             $scope.requesters.push(requester);
         }
     };
