@@ -5,21 +5,31 @@
 angular.module("app", []).controller("provideCtrl", function ($scope) {
     //账户部分初始化
     //初始取出账户
-    $scope.accounts = web3.eth.accounts;
+    $scope.accounts = getRegisterAccounts();
     $scope.dataSets = [];
     $scope.requesters = [];
+
+    /**
+     * 页面加载完后自动显示第一个用户名
+     */
+    $scope.$watch('$viewContentLoaded', function () {
+        if ($scope.accounts.length > 0) {
+            $scope.selectedAccount = $scope.accounts[0].userName;
+        }
+    });
 
     /**
      * 查询对应账户所提供的数据列表
      */
     $scope.getProvideData = function () {
         $scope.dataSets = [];
+        var accountAddress = getUserAddressByName($scope.selectedAccount);
         //获取提供者提供的数据总数
-        var provideNum = contractInstance.getDataNumByProvider.call($scope.selectedAccount).toNumber();
+        var provideNum = contractInstance.getDataNumByProvider.call(accountAddress).toNumber();
         //逐个获取数据对象
         for (var i = 0; i < provideNum; i++) {
             var dataSet = [];
-            dataSet.dataName = web3.toAscii(contractInstance.getProvideDataNameByIndex.call($scope.selectedAccount, i));
+            dataSet.dataName = web3.toAscii(contractInstance.getProvideDataNameByIndex.call(accountAddress, i));
             //根据数据名称获取数据对象合约
             var dataObjectInstance = dataContract.at(contractInstance.getDataAddressByDataName.call(dataSet.dataName));
             //获取对象介绍
@@ -45,6 +55,7 @@ angular.module("app", []).controller("provideCtrl", function ($scope) {
      */
     $scope.getDataRequestList = function () {
         $scope.requesters = [];
+        var accountAddress = getUserAddressByName($scope.selectedAccount);
         //若未选择数据则返回
         if (!$scope.selectedData) return;
         //获取权限对象
@@ -54,7 +65,9 @@ angular.module("app", []).controller("provideCtrl", function ($scope) {
             //存入数组
             var requester = [];
             requester.address = accessContractInstance.requesterList(i);
-            requester.status = accessType[accessContractInstance.accessList(requester.address)];
+            requester.userName = getUserNameByAddress(requester.address);
+            //获取请求者对应请求地址的权限
+            requester.status = accessType[accessContractInstance.accessList(accessContractInstance.requestList(requester.address))];
             $scope.requesters.push(requester);
         }
     };
@@ -82,17 +95,12 @@ angular.module("app", []).controller("provideCtrl", function ($scope) {
             return;
         }
         //解锁账户
-        try {
-            web3.personal.unlockAccount($scope.selectedAccount, $scope.password);
-        } catch (err) {
-            console.log(err);
-            alert("You haven't connect to ethereum or the password cannot match the account!");
-            return;
-        }
+        var accountAddress = getUserAddressByName($scope.selectedAccount);
+        if (!unlockEtherAccount(accountAddress, $scope.password)) return;
         //调用函数确认数据请求
         try {
             contractInstance.confirmData(dataName, requester, {
-                from: $scope.selectedAccount,
+                from: accountAddress,
                 gas: 80000000
             });
         }
@@ -110,17 +118,12 @@ angular.module("app", []).controller("provideCtrl", function ($scope) {
             return;
         }
         //解锁账户
-        try {
-            web3.personal.unlockAccount($scope.selectedAccount, $scope.password);
-        } catch (err) {
-            console.log(err);
-            alert("You haven't connect to ethereum or the password cannot match the account!");
-            return;
-        }
+        var accountAddress = getUserAddressByName($scope.selectedAccount);
+        if (!unlockEtherAccount(accountAddress, $scope.password)) return;
         //调用函数确认数据请求
         try {
             contractInstance.rejectData(dataName, requester, {
-                from: $scope.selectedAccount,
+                from: accountAddress,
                 gas: 80000000
             });
         }

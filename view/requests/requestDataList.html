@@ -30,6 +30,18 @@
     </tbody>
 </table>
 <button ng-click="getRequestList()">刷新</button>
+
+<p>修改请求备注</p>
+<label>数据名称：</label>
+<input ng-model="dataName">
+<hr/>
+<label>新备注：</label>
+<input ng-model="information">
+<hr/>
+<label>账户密码：</label>
+<input ng-model="password" type="password">
+<hr/>
+<button ng-click="updateInfo()">提交</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>

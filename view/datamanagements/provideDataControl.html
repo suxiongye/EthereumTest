@@ -7,8 +7,8 @@
 <body ng-app="app" ng-controller="provideCtrl">
 <div ng-show="accounts.length > 0">
     <label>提供者账户：</label>
-    <select ng-init="selectedAccount = accounts[0]" ng-model="selectedAccount"
-            ng-options="account for account in accounts "
+    <select ng-model="selectedAccount"
+            ng-options="account.userName as account.userName for account in accounts "
             ng-change="getProvideData()">
     </select>
 </div>
@@ -31,7 +31,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="requester in requesters" render-finish>
-        <td>{{requester.address}}</td>
+        <td>{{requester.userName}}</td>
         <td>{{requester.status}}</td>
         <td>
             <button ng-click="confirmData(selectedData,requester.address)">Confirm</button>

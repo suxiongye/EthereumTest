@@ -4,23 +4,33 @@
 angular.module("app", []).controller("personalData", function ($scope) {
     //账户部分初始化
     //初始取出账户
-    $scope.accounts = web3.eth.accounts;
+    $scope.accounts = getRegisterAccounts();
     $scope.dataSets = [];
     $scope.provideSum = 0;
     $scope.requestSum = 0;
+
+    /**
+     * 页面加载完后自动显示第一个用户名
+     */
+    $scope.$watch('$viewContentLoaded', function () {
+        if ($scope.accounts.length > 0) {
+            $scope.selectedAccount = $scope.accounts[0].userName;
+        }
+    });
 
     /**
      * 获取提供数据列表
      */
     function getProvideDataList() {
         $scope.provideDataSet = [];
+        var accountAddress = getUserAddressByName($scope.selectedAccount);
         //获取提供者提供的数据总数
-        var provideNum = contractInstance.getDataNumByProvider.call($scope.selectedAccount).toNumber();
+        var provideNum = contractInstance.getDataNumByProvider.call(accountAddress).toNumber();
         $scope.provideSum = provideNum;
         //逐个获取数据对象
         for (var i = 0; i < provideNum; i++) {
             var dataSet = [];
-            dataSet.dataName = web3.toAscii(contractInstance.getProvideDataNameByIndex.call($scope.selectedAccount, i));
+            dataSet.dataName = web3.toAscii(contractInstance.getProvideDataNameByIndex.call(accountAddress, i));
             //根据数据名称获取数据对象合约
             var dataObjectInstance = dataContract.at(contractInstance.getDataAddressByDataName.call(dataSet.dataName));
             //获取对象类型
@@ -45,18 +55,19 @@ angular.module("app", []).controller("personalData", function ($scope) {
      */
     function getRequestDataList() {
         $scope.requestDataSet = [];
+        var accountAddress = getUserAddressByName($scope.selectedAccount);
         //获取请求数据数量
-        var requestDataNum = contractInstance.getDataNumByRequester.call($scope.selectedAccount).toNumber();
+        var requestDataNum = contractInstance.getDataNumByRequester.call(accountAddress).toNumber();
         $scope.requestSum = requestDataNum;
         for (var i = 0; i < requestDataNum; i++) {
             //获取数据名称
             var data = [];
-            data.dataName = web3.toAscii(contractInstance.getRequestDataNameByIndex.call($scope.selectedAccount, i));
+            data.dataName = web3.toAscii(contractInstance.getRequestDataNameByIndex.call(accountAddress, i));
             //获取对应名称的权限合约
             var accessContractInstance = accessContract.at(contractInstance.getDataAccessByName.call(data.dataName));
             data.provider = getUserNameByAddress(accessContractInstance.provider());
             //获取当前状态
-            data.status = accessType[accessContractInstance.accessList($scope.selectedAccount)];
+            data.status = accessType[accessContractInstance.accessList(accessContractInstance.requestList(accountAddress))];
             //存入数据
             $scope.requestDataSet.push(data);
         }

@@ -22,15 +22,16 @@ angular.module("app", []).controller("request", function ($scope) {
      * 动态检测是否合法
      */
     $scope.isDataLegal = function () {
-        if ($scope.isDataExist() || $scope.isDataRequestSame()) {
+        //若数据不存在或者请求者和数据提供者一致，则不合法
+        if (!$scope.isDataExist() || $scope.isDataRequestSame()) {
             $scope.requestDisabled = true;
             return;
         } else {
+            $scope.nameError = "";
             if (!$scope.information) {
                 $scope.infoError = "Please input the request information";
                 return;
             }
-            $scope.nameError = "";
             $scope.infoError = "";
             $scope.requestDisabled = false;
         }
@@ -42,14 +43,14 @@ angular.module("app", []).controller("request", function ($scope) {
     $scope.isDataExist = function () {
         if (!$scope.dataName) {
             $scope.nameError = "Please input data name!";
-            return true;
+            return false;
         }
         //检查数据名称是否存在
         if (!contractInstance.isDataNameExist.call($scope.dataName)) {
             $scope.nameError = "The data name is not exist!";
-            return true;
+            return false;
         }
-        return false;
+        return true;
     };
 
     /**
@@ -99,7 +100,7 @@ angular.module("app", []).controller("request", function ($scope) {
             var accessContractInstance = accessContract.at(contractInstance.getDataAccessByName.call(data.dataName));
             data.provider = getUserNameByAddress(accessContractInstance.provider());
             //获取当前状态
-            data.status = accessType[accessContractInstance.accessList(address)];
+            data.status = accessType[accessContractInstance.accessList(accessContractInstance.requestList(address))];
             //获取当前请求备注信息
             var requestContractInstance = requestContract.at(contractInstance.getDataRequest.call(data.dataName, address));
             data.information = requestContractInstance.information();
@@ -108,4 +109,29 @@ angular.module("app", []).controller("request", function ($scope) {
         }
     };
 
+    /**
+     * 更新请求备注
+     */
+    $scope.updateInfo = function () {
+        if (!$scope.dataName || !$scope.information) {
+            alert("请输入数据名称或备注");
+            return;
+        }
+        if (!$scope.isDataExist()) {
+            alert("数据名称不存在");
+            return;
+        }
+        //解锁账户
+        if (!unlockEtherAccount(getUserAddressByName($scope.selectedAccount), $scope.password)) return;
+
+        //发送修改请求
+        try {
+            contractInstance.changeDataRequestInfo($scope.dataName, $scope.information, {
+                from: getUserAddressByName($scope.selectedAccount),
+                gas: 80000000
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
 });
