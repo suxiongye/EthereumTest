@@ -6,6 +6,7 @@ angular.module("app", []).controller("request", function ($scope) {
     //初始取出账户
     $scope.accounts = getRegisterAccounts();
     $scope.requestDisabled = true;
+    $scope.updateDisabled = true;
     $scope.dataSets = [];
     $scope.information = "";
 
@@ -21,7 +22,7 @@ angular.module("app", []).controller("request", function ($scope) {
     /**
      * 动态检测是否合法
      */
-    $scope.isDataLegal = function () {
+    $scope.isRequestLegal = function () {
         //若数据不存在或者请求者和数据提供者一致，则不合法
         if (!$scope.isDataExist() || $scope.isDataRequestSame()) {
             $scope.requestDisabled = true;
@@ -134,4 +135,35 @@ angular.module("app", []).controller("request", function ($scope) {
             console.log(err);
         }
     };
+
+    /**
+     * 判断更新备注是否合法
+     */
+    $scope.isUpdateLegal = function () {
+        //判断数据是否存在
+        if (!$scope.dataName || !$scope.isDataExist()) {
+            $scope.updateDisabled = true;
+            $scope.nameError = "数据不存在";
+            return;
+        }
+        $scope.nameError = "";
+        //判断输入的请求备注是否合法
+        if (!$scope.information) {
+            $scope.updateDisabled = true;
+            $scope.infoError = "请输入备注";
+            return;
+        }
+        $scope.infoError = "";
+
+        //判断数据是否已经被确认或者拒绝
+        if (isDataAudited($scope.dataName, getUserAddressByName($scope.selectedAccount))) {
+            $scope.infoError = "该数据已被审核，无法修改！";
+            $scope.updateDisabled = true;
+            return;
+
+        }
+        $scope.infoError = "";
+        $scope.updateDisabled = false;
+    };
+
 });

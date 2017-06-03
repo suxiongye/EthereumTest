@@ -33,15 +33,16 @@
 
 <p>修改请求备注</p>
 <label>数据名称：</label>
-<input ng-model="dataName">
+<input ng-model="dataName" ng-change="isUpdateLegal()">{{nameError}}
 <hr/>
 <label>新备注：</label>
-<input ng-model="information">
+<input ng-model="information" ng-change="isUpdateLegal()">{{infoError}}
 <hr/>
+{{dataError}}
 <label>账户密码：</label>
 <input ng-model="password" type="password">
 <hr/>
-<button ng-click="updateInfo()">提交</button>
+<button ng-click="updateInfo()" ng-disabled="updateDisabled">提交</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
