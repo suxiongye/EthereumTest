@@ -66,6 +66,9 @@ angular.module("app", []).controller("provideCtrl", function ($scope) {
             var requester = [];
             requester.address = accessContractInstance.requesterList(i);
             requester.userName = getUserNameByAddress(requester.address);
+            //获取当前请求备注信息
+            var requestContractInstance = requestContract.at(contractInstance.getDataRequest.call($scope.selectedData, requester.address));
+            requester.information = requestContractInstance.information();
             //获取请求者对应请求地址的权限
             requester.status = accessType[accessContractInstance.accessList(accessContractInstance.requestList(requester.address))];
             $scope.requesters.push(requester);

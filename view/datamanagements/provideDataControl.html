@@ -24,6 +24,7 @@
     <thead>
     <tr>
         <td>Requester</td>
+        <td>Information</td>
         <td>Status</td>
         <td>Confirm</td>
         <td>Reject</td>
@@ -32,6 +33,7 @@
     <tbody>
     <tr ng-repeat="requester in requesters" render-finish>
         <td>{{requester.userName}}</td>
+        <td>{{requester.information}}</td>
         <td>{{requester.status}}</td>
         <td>
             <button ng-click="confirmData(selectedData,requester.address)">Confirm</button>

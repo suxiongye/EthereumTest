@@ -68,6 +68,9 @@ angular.module("app", []).controller("personalData", function ($scope) {
             data.provider = getUserNameByAddress(accessContractInstance.provider());
             //获取当前状态
             data.status = accessType[accessContractInstance.accessList(accessContractInstance.requestList(accountAddress))];
+            //获取当前请求备注信息
+            var requestContractInstance = requestContract.at(contractInstance.getDataRequest.call(data.dataName, accountAddress));
+            data.information = requestContractInstance.information();
             //存入数据
             $scope.requestDataSet.push(data);
         }

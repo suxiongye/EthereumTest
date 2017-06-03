@@ -8,7 +8,8 @@
 <div ng-show="accounts.length > 0">
     <label>选择需要查询的账户：</label>
     <select ng-model="selectedAccount"
-            ng-options="account.userName as account.userName for account in accounts " ng-change="getPersonalDataList()">
+            ng-options="account.userName as account.userName for account in accounts "
+            ng-change="getPersonalDataList()">
     </select>
 </div>
 <label>Provide Data List</label>
@@ -38,6 +39,7 @@
     <tr>
         <td>Data Name</td>
         <td>Provider</td>
+        <td>Information</td>
         <td>Request Status</td>
     </tr>
     </thead>
@@ -45,6 +47,7 @@
     <tr ng-repeat="data in requestDataSet">
         <td>{{data.dataName}}</td>
         <td>{{data.provider}}</td>
+        <td>{{data.information}}</td>
         <td>{{data.status}}</td>
     </tr>
     </tbody>
