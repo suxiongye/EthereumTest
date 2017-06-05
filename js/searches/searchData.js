@@ -1,7 +1,7 @@
 /**
  * Created by su on 2017/5/20.
  */
-angular.module("app", []).controller("search", function ($scope) {
+angular.module("app", []).controller("searchData", function ($scope) {
     $scope.dataSets = [];
     /**
      * 根据名字搜索数据详细信息

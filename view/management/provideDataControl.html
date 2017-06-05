@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Provide Data Control</title>
+</head>
+<body ng-app="app" ng-controller="provideCtrlData">
+<div ng-show="accounts.length > 0">
+    <label>提供者账户：</label>
+    <select ng-model="selectedAccount"
+            ng-options="account.userName as account.userName for account in accounts "
+            ng-change="getProvideData()">
+    </select>
+</div>
+<div>
+    <label>数据名称：</label>
+    <select ng-model="selectedData"
+            ng-options="data.dataName as data.dataName for data in dataSets "
+            ng-change="getDataRequestList()">
+    </select>
+</div>
+<label>Requester List</label>
+<table>
+    <thead>
+    <tr>
+        <td>Requester</td>
+        <td>Information</td>
+        <td>Status</td>
+        <td>Confirm</td>
+        <td>Reject</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="requester in requesters">
+        <td>{{requester.userName}}</td>
+        <td>{{requester.information}}</td>
+        <td>{{requester.status}}</td>
+        <td>
+            <button ng-click="confirmData(selectedData,requester.address)" ng-disabled="requester.control_disable">
+                Confirm
+            </button>
+        </td>
+        <td>
+            <button ng-click="rejectData(selectedData,requester.address)" ng-disabled="requester.control_disable">
+                Reject
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<button ng-click="refresh()">刷新</button>
+<hr/>
+<label>Password:</label>
+<input ng-model="password" type="password">
+
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/config/config.js"></script>
+<script type="text/javascript" src="../../js/management/accessControlData.js"></script>
+</html>

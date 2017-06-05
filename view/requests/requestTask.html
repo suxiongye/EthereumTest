@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Request Data</title>
+    <title>Request Task</title>
 </head>
-<body ng-app="app" ng-controller="requestData">
+<body ng-app="app" ng-controller="requestTask">
 <div ng-show="accounts.length > 0">
     <label>请求者账户：</label>
     <select ng-model="selectedAccount"
@@ -12,8 +12,8 @@
     </select>
 </div>
 <div>
-    <label>数据名称：</label>
-    <input ng-model="dataName" ng-change="isRequestLegal()">
+    <label>任务名称：</label>
+    <input ng-model="taskName" ng-change="isRequestLegal()">
     {{nameError}}
     <hr/>
     <label>请求备注：</label>
@@ -23,7 +23,7 @@
 <label>Password：</label>
 <input ng-model="password">
 <hr/>
-<button ng-click="requestData()" ng-disabled="requestDisabled">Request Data</button>
+<button ng-click="requestTask()" ng-disabled="requestDisabled">Request Task</button>
 </body>
 
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
@@ -31,5 +31,5 @@
 <script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
 <script src="../../js/index.js"></script>
 <script type="text/javascript" src="../../js/config/config.js"></script>
-<script type="text/javascript" src="../../js/requests/requestData.js"></script>
+<script type="text/javascript" src="../../js/requests/requestTask.js"></script>
 </html>

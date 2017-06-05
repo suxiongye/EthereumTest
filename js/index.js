@@ -18,6 +18,10 @@ var registerAccounts = [];
  * @param password
  */
 function unlockEtherAccount(accountAddress, password) {
+    if (!accountAddress || !password) {
+        alert("请输入密码");
+        return;
+    }
     //解锁账户
     try {
         web3.personal.unlockAccount(accountAddress, password);
@@ -82,9 +86,25 @@ function isTheUserAddressRegister(address) {
  * @param requester
  * @returns {boolean}
  */
-function isDataAudited(dataName, requester){
+function isDataAudited(dataName, requester) {
     //获取数据权限
     var accessContractInstance = accessContract.at(contractInstance.getDataAccessByName.call(dataName));
+    //获取对应请求结果
+    var requestStatus = accessType[accessContractInstance.accessList(accessContractInstance.requestList(requester))];
+
+    //判断是否已经审核
+    return (requestStatus == accessType[2] || requestStatus == accessType[3])
+}
+
+/**
+ * 返回对应任务是否已经被确认或者拒绝
+ * @param taskName
+ * @param requester
+ * @returns {boolean}
+ */
+function isTaskAudited(taskName, requester) {
+    //获取数据权限
+    var accessContractInstance = accessContract.at(contractInstance.getTaskAccessByName.call(taskName));
     //获取对应请求结果
     var requestStatus = accessType[accessContractInstance.accessList(accessContractInstance.requestList(requester))];
 

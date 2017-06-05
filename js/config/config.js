@@ -433,7 +433,7 @@ var abiDataObject = [{
     }, {"name": "dAuth", "type": "address"}], "payable": false, "type": "constructor"
 }];
 /**
- * 数据对象合约
+ * 任务对象合约
  * 功能：获取数据详细信息
  * 可访问变量：
  * dataTypes[] —— 根据下标返回类型结构体json对象{bytes32 type_key,bytes32 type_value,address type_address}

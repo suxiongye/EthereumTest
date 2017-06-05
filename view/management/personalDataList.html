@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Data List</title>
+</head>
+<body ng-app="app" ng-controller="personalData">
+<div ng-show="accounts.length > 0">
+    <label>选择需要查询的账户：</label>
+    <select ng-model="selectedAccount"
+            ng-options="account.userName as account.userName for account in accounts "
+            ng-change="getPersonalDataList()">
+    </select>
+</div>
+<label>Provide Data List</label>
+<p>You have provided {{provideSum}} data.</p>
+<table>
+    <thead>
+    <tr>
+        <td>Data Name</td>
+        <td>Type List</td>
+        <td>Requester Number</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="data in provideDataSet">
+        <td>{{data.dataName}}</td>
+        <td><p ng-repeat="type in data.types">
+            {{type.key}} : {{type.value}}
+        </p></td>
+        <td>{{data.requestNum}}</td>
+    </tr>
+    </tbody>
+</table>
+<label>Request Data List</label>
+<p>You have requested {{requestSum}} data.</p>
+<table>
+    <thead>
+    <tr>
+        <td>Data Name</td>
+        <td>Provider</td>
+        <td>Information</td>
+        <td>Request Status</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="data in requestDataSet">
+        <td>{{data.dataName}}</td>
+        <td>{{data.provider}}</td>
+        <td>{{data.information}}</td>
+        <td>{{data.status}}</td>
+    </tr>
+    </tbody>
+</table>
+<button ng-click="refresh()">刷新</button>
+</body>
+<script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
+<script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
+<script src="../../js/index.js"></script>
+<script type="text/javascript" src="../../js/config/config.js"></script>
+<script type="text/javascript" src="../../js/management/personalData.js"></script>
+</html>

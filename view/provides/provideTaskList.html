@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Provide Data List</title>
+    <title>Provide Task List</title>
 </head>
-<body ng-app="app" ng-controller="provideData">
+<body ng-app="app" ng-controller="provideTask">
 <div ng-show="accounts.length > 0">
     <label>选择需要查询的提供者账户：</label>
     <select ng-model="selectedAccount"
             ng-options="account.userName as account.userName for account in accounts "
-            ng-change="getProvideData()">
+            ng-change="getProvideTask()">
     </select>
 </div>
 <table>
@@ -18,24 +18,26 @@
         <td>Data Name</td>
         <td>Type List</td>
         <td>Introduction</td>
+        <td>Status</td>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="dataSet in dataSets">
-        <td>{{dataSet.dataName}}</td>
-        <td><p ng-repeat="type in dataSet.types">
+    <tr ng-repeat="taskSet in taskSets">
+        <td>{{taskSet.taskName}}</td>
+        <td><p ng-repeat="type in taskSet.types">
             {{type.key}} : {{type.value}}
         </p></td>
-        <td>{{dataSet.introduction}}</td>
+        <td>{{taskSet.introduction}}</td>
+        <td>{{taskSet.status}}</td>
     </tr>
     </tbody>
 </table>
-<button ng-click="getProvideData()">getProvideData</button>
+<button ng-click="getProvideTask()">getProvideTask</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
 <script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
 <script src="../../js/index.js"></script>
 <script type="text/javascript" src="../../js/config/config.js"></script>
-<script type="text/javascript" src="../../js/provides/provideData.js"></script>
+<script type="text/javascript" src="../../js/provides/provideTask.js"></script>
 </html>

@@ -2,53 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Personal Data List</title>
+    <title>Personal Task List</title>
 </head>
-<body ng-app="app" ng-controller="personalData">
+<body ng-app="app" ng-controller="personalTask">
 <div ng-show="accounts.length > 0">
     <label>选择需要查询的账户：</label>
     <select ng-model="selectedAccount"
             ng-options="account.userName as account.userName for account in accounts "
-            ng-change="getPersonalDataList()">
+            ng-change="getPersonalTaskList()">
     </select>
 </div>
-<label>Provide Data List</label>
-<p>You have provided {{provideSum}} data.</p>
+<label>Provide Task List</label>
+<p>You have provided {{provideSum}} task.</p>
 <table>
     <thead>
     <tr>
-        <td>Data Name</td>
+        <td>Task Name</td>
         <td>Type List</td>
         <td>Requester Number</td>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="data in provideDataSet">
-        <td>{{data.dataName}}</td>
-        <td><p ng-repeat="type in data.types">
+    <tr ng-repeat="task in provideTaskSet">
+        <td>{{task.taskName}}</td>
+        <td><p ng-repeat="type in task.types">
             {{type.key}} : {{type.value}}
         </p></td>
-        <td>{{data.requestNum}}</td>
+        <td>{{task.requestNum}}</td>
     </tr>
     </tbody>
 </table>
-<label>Request Data List</label>
-<p>You have requested {{requestSum}} data.</p>
+<label>Request Task List</label>
+<p>You have requested {{requestSum}} task.</p>
 <table>
     <thead>
     <tr>
-        <td>Data Name</td>
+        <td>Task Name</td>
         <td>Provider</td>
         <td>Information</td>
         <td>Request Status</td>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="data in requestDataSet">
-        <td>{{data.dataName}}</td>
-        <td>{{data.provider}}</td>
-        <td>{{data.information}}</td>
-        <td>{{data.status}}</td>
+    <tr ng-repeat="task in requestTaskSet">
+        <td>{{task.taskName}}</td>
+        <td>{{task.provider}}</td>
+        <td>{{task.information}}</td>
+        <td>{{task.status}}</td>
     </tr>
     </tbody>
 </table>
@@ -58,6 +58,6 @@
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
 <script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
 <script src="../../js/index.js"></script>
-<script type="text/javascript" src="../../js/configs/config.js"></script>
-<script type="text/javascript" src="../../js/datamanagements/personalData.js"></script>
+<script type="text/javascript" src="../../js/config/config.js"></script>
+<script type="text/javascript" src="../../js/management/personalTask.js"></script>
 </html>

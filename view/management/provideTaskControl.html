@@ -2,23 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Provide Data Control</title>
+    <title>Provide Task Control</title>
 </head>
-<body ng-app="app" ng-controller="provideCtrl">
+<body ng-app="app" ng-controller="provideCtrlTask">
 <div ng-show="accounts.length > 0">
     <label>提供者账户：</label>
     <select ng-model="selectedAccount"
             ng-options="account.userName as account.userName for account in accounts "
-            ng-change="getProvideData()">
+            ng-change="getProvideTask()">
     </select>
 </div>
 <div>
-    <label>数据名称：</label>
-    <select ng-model="selectedData"
-            ng-options="data.dataName as data.dataName for data in dataSets "
-            ng-change="getDataRequestList()">
+    <label>任务名称：</label>
+    <select ng-model="selectedTask"
+            ng-options="task.taskName as task.taskName for task in taskSets "
+            ng-change="getTaskRequestList()">
     </select>
 </div>
+<div ng-show="!isTaskFinished()">
+    <button ng-click="endTask()">关闭任务</button>
+</div>
+<hr/>
 <label>Requester List</label>
 <table>
     <thead>
@@ -36,12 +40,12 @@
         <td>{{requester.information}}</td>
         <td>{{requester.status}}</td>
         <td>
-            <button ng-click="confirmData(selectedData,requester.address)" ng-disabled="requester.control_disable">
+            <button ng-click="confirmTask(selectedTask,requester.address)" ng-disabled="requester.control_disable">
                 Confirm
             </button>
         </td>
         <td>
-            <button ng-click="rejectData(selectedData,requester.address)" ng-disabled="requester.control_disable">
+            <button ng-click="rejectTask(selectedTask,requester.address)" ng-disabled="requester.control_disable">
                 Reject
             </button>
         </td>
@@ -59,6 +63,6 @@
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
 <script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
 <script src="../../js/index.js"></script>
-<script type="text/javascript" src="../../js/configs/config.js"></script>
-<script type="text/javascript" src="../../js/datamanagements/accessControl.js"></script>
+<script type="text/javascript" src="../../js/config/config.js"></script>
+<script type="text/javascript" src="../../js/management/accessControlTask.js"></script>
 </html>

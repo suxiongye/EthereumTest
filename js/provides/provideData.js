@@ -1,12 +1,13 @@
 /**
  * Created by su on 2017/5/12.
  */
-angular.module("app", []).controller("provide", function ($scope) {
+angular.module("app", []).controller("provideData", function ($scope) {
     //账户部分初始化
     //初始取出已注册的账户
     $scope.accounts = getRegisterAccounts();
     $scope.types = [{key: "", value: ""}];
     $scope.dataSets = [];
+    $scope.nameError = "";
 
     /**
      * 页面加载完后自动显示第一个用户名

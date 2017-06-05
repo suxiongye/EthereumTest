@@ -2,35 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search Data</title>
+    <title>Search Task</title>
 </head>
-<body ng-app="app" ng-controller="searchData">
-<label>Search By Data Name</label>
-<input ng-model="dataName">
+<body ng-app="app" ng-controller="searchTask">
+<label>Search By Task Name</label>
+<input ng-model="taskName">
 <hr>
 <table>
     <thead>
     <tr>
-        <td>Data Name</td>
+        <td>Task Name</td>
         <td>Type List</td>
         <td>Introduction</td>
         <td>Provider</td>
+        <td>Status</td>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>{{data.dataName}}</td>
-        <td><p ng-repeat="type in data.types">
+        <td>{{task.taskName}}</td>
+        <td><p ng-repeat="type in task.types">
             {{type.key}} : {{type.value}}
         </p></td>
-        <td>{{data.introduction}}</td>
-        <td>{{data.provider}}</td>
+        <td>{{task.introduction}}</td>
+        <td>{{task.provider}}</td>
+        <td>{{task.taskStatus}}</td>
     </tr>
     </tbody>
 </table>
-<button ng-click="searchDataByName()">Search Data By Name</button>
+<button ng-click="searchTaskByName()">Search Task By Name</button>
 <hr>
-<label>Search By Data Type</label>
+<label>Search By Task Type</label>
 <hr>
 <label>Type Key</label>
 <input ng-model="type_key">
@@ -41,27 +43,29 @@
 <table>
     <thead>
     <tr>
-        <td>Data Name</td>
+        <td>Task Name</td>
         <td>Type List</td>
         <td>Introduction</td>
+        <td>Status</td>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="dataSet in dataSets">
-        <td>{{dataSet.dataName}}</td>
-        <td><p ng-repeat="type in dataSet.types">
+    <tr ng-repeat="taskSet in taskSets">
+        <td>{{taskSet.taskName}}</td>
+        <td><p ng-repeat="type in taskSet.types">
             {{type.key}} : {{type.value}}
         </p></td>
-        <td>{{dataSet.introduction}}</td>
+        <td>{{taskSet.introduction}}</td>
+        <td>{{taskSet.taskStatus}}</td>
     </tr>
     </tbody>
 </table>
-<button ng-click="searchDataByType()">Search Data By Type</button>
+<button ng-click="searchTaskByType()">Search Task By Type</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
 <script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
 <script src="../../js/index.js"></script>
 <script type="text/javascript" src="../../js/config/config.js"></script>
-<script type="text/javascript" src="../../js/searches/searchData.js"></script>
+<script type="text/javascript" src="../../js/searches/searchTask.js"></script>
 </html>

@@ -1,7 +1,7 @@
 /**
  * Created by su on 2017/5/28.
  */
-angular.module("app", []).controller("request", function ($scope) {
+angular.module("app", []).controller("requestData", function ($scope) {
     //账户部分初始化
     //初始取出账户
     $scope.accounts = getRegisterAccounts();

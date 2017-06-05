@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Provide Data</title>
+    <title>Provide Task</title>
 </head>
-<body ng-app="app" ng-controller="provideData">
+<body ng-app="app" ng-controller="provideTask">
 Choose the provider:
 <select ng-model="selectedAccount"
         ng-options="account.userName as account.userName for account in accounts ">
 </select>
 <hr/>
-DataName:
-<input ng-model="dataName" ng-change="checkDataNameExist()">{{nameError}}
+TaskName:
+<input ng-model="taskName" ng-change="checkTaskNameExist()">{{nameError}}
 <hr/>
 <div ng-repeat="type in types">
     Type Key {{$index}}:
@@ -29,13 +29,13 @@ Introdcution:
 <hr/>
 Password: <input ng-model="password" type="password">
 <hr/>
-<button ng-click="provideData()">Provide Data</button>
+<button ng-click="provideTask()">Provide Task</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>
 <script type="text/javascript" src="../../node_modules/web3/dist/web3-light.js"></script>
 <script src="../../js/index.js"></script>
 <script type="text/javascript" src="../../js/config/config.js"></script>
-<script type="text/javascript" src="../../js/provides/provideData.js"></script>
+<script type="text/javascript" src="../../js/provides/provideTask.js"></script>
 
 </html>
