@@ -39,6 +39,7 @@
  * getTaskNumByRequester(address requester) —— 根据请求者地址，获取请求者请求的任务量(uint)
  * getRequestDataNameByIndex(address requester, uint index) —— 根据请求者地址和下标，获取请求的数据名称(bytes32)
  * getRequestTaskNameByIndex(address requester, uint index) —— 根据请求者地址和下标，获取请求的任务名称(bytes32)
+ * isTaskFinished(bytes32 taskName) —— 获取对应任务是否完成
  * requestData(bytes32 dataName, string information) —— 根据数据名称对数据发起请求，并携带备注信息，返回是否成功(bool)
  * requestTask(bytes32 taskName, string information) —— 根据任务名称对任务发起请求，并携带备注信息，返回是否成功(bool)
  * rejectData(bytes32 dataName, address requester) —— 根据地址和数据名称，拒绝数据请求
@@ -50,8 +51,10 @@
  * getDataRequest(bytes32 dataName, address requester) —— 根据数据名称与请求者地址，返回请求地址(address)
  * getTaskRequest(bytes32 taskName, address requester) —— 根据数据名称与请求者地址，返回请求地址(address)
  * endTask(bytes32 taskName) —— 根据任务名称结束任务，返回是否成功(bool)
+ * getDataVisitTime(bytes32 dataName, address requester) —— 根据数据名称和请求者地址，获取访问次数
+ * setDataCapability(bytes32 dataName, string cap) —— 设置对应数据的权限字符
  */
-var contractAddress = "0x9d9981DEc994A5CF12F696A708a5B65747731Caa";
+var contractAddress = "0x96BaF5494CDA0efB3c2f3D7801eE1483189c5D76";
 var abi = [{
     "constant": false,
     "inputs": [{"name": "taskName", "type": "bytes32"}, {"name": "requester", "type": "address"}],
@@ -138,6 +141,13 @@ var abi = [{
     "type": "function"
 }, {
     "constant": false,
+    "inputs": [{"name": "dataName", "type": "bytes32"}, {"name": "cap", "type": "string"}],
+    "name": "setDataCapability",
+    "outputs": [{"name": "", "type": "bool"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
     "inputs": [{"name": "type_key", "type": "bytes32"}, {"name": "type_value", "type": "bytes32"}, {
         "name": "dataName",
         "type": "bytes32"
@@ -164,6 +174,16 @@ var abi = [{
     "constant": false,
     "inputs": [{"name": "type_key", "type": "bytes32"}, {"name": "type_value", "type": "bytes32"}],
     "name": "getTypeAddressByName",
+    "outputs": [{"name": "", "type": "address"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{"name": "daNa", "type": "bytes32"}, {"name": "intro", "type": "string"}, {
+        "name": "cap",
+        "type": "string"
+    }],
+    "name": "createData",
     "outputs": [{"name": "", "type": "address"}],
     "payable": false,
     "type": "function"
@@ -232,6 +252,13 @@ var abi = [{
     "type": "function"
 }, {
     "constant": false,
+    "inputs": [{"name": "taskName", "type": "bytes32"}],
+    "name": "isTaskFinished",
+    "outputs": [{"name": "", "type": "bool"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
     "inputs": [],
     "name": "getDataNum",
     "outputs": [{"name": "", "type": "uint256"}],
@@ -256,6 +283,13 @@ var abi = [{
     "inputs": [{"name": "type_level1", "type": "bytes32"}, {"name": "type_level2", "type": "bytes32"}],
     "name": "isTypeExist",
     "outputs": [{"name": "", "type": "bool"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{"name": "dataName", "type": "bytes32"}, {"name": "requester", "type": "address"}],
+    "name": "getDataVisitTime",
+    "outputs": [{"name": "", "type": "uint256"}],
     "payable": false,
     "type": "function"
 }, {
@@ -357,13 +391,6 @@ var abi = [{
     "inputs": [{"name": "provider", "type": "address"}, {"name": "index", "type": "uint256"}],
     "name": "getProvideTaskNameByIndex",
     "outputs": [{"name": "", "type": "bytes32"}],
-    "payable": false,
-    "type": "function"
-}, {
-    "constant": false,
-    "inputs": [{"name": "daNa", "type": "bytes32"}, {"name": "intro", "type": "string"}],
-    "name": "createData",
-    "outputs": [{"name": "", "type": "address"}],
     "payable": false,
     "type": "function"
 }, {"inputs": [], "payable": true, "type": "constructor"}];
@@ -592,11 +619,13 @@ var abiTypeObject = [{
  * requesterList[] —— 根据下标获取请求者地址
  * requesterNum —— 返回请求者数量
  * provider —— 返回数据提供者地址
+ * numberOfAccess(mapping(address => uint) —— 记录请求者=>访问次数
  *
  * 可调用函数：
  * isRequestExist(address requester) —— 返回请求者是否请求过该数据(bool)
  * isRequestConfirm(address requester) —— 返回是否确认对应请求者的数据请求(bool)
  * isRequestReject(address requester) —— 返回是否拒绝对应请求者的数据请求(bool)
+ * getCapability() —— 已通过的请求者可获取请求对象的权限(string)
  */
 var abiAccessObject = [{
     "constant": true,
@@ -610,6 +639,13 @@ var abiAccessObject = [{
     "inputs": [],
     "name": "provider",
     "outputs": [{"name": "", "type": "address"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [{"name": "", "type": "address"}],
+    "name": "numberOfAccess",
+    "outputs": [{"name": "", "type": "uint256"}],
     "payable": false,
     "type": "function"
 }, {
@@ -663,6 +699,20 @@ var abiAccessObject = [{
     "type": "function"
 }, {
     "constant": false,
+    "inputs": [],
+    "name": "getCapability",
+    "outputs": [{"name": "", "type": "string"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{"name": "cap", "type": "string"}],
+    "name": "setCapability",
+    "outputs": [],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
     "inputs": [{"name": "requester", "type": "address"}],
     "name": "rejectRequest",
     "outputs": [{"name": "", "type": "bool"}],
@@ -683,9 +733,10 @@ var abiAccessObject = [{
     "payable": false,
     "type": "function"
 }, {
-    "inputs": [{"name": "pro", "type": "address"}, {"name": "dataM", "type": "address"}],
-    "payable": false,
-    "type": "constructor"
+    "inputs": [{"name": "pro", "type": "address"}, {"name": "dataM", "type": "address"}, {
+        "name": "cap",
+        "type": "string"
+    }], "payable": false, "type": "constructor"
 }];
 
 /**

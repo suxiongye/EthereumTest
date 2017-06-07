@@ -41,17 +41,23 @@ angular.module("app", []).controller("provideData", function ($scope) {
             alert("Please input the password!");
             return;
         }
+        if(!$scope.checkCapabilityLegal()){
+            alert("请输入权限信息！");
+            return;
+        }
         //检查数据名称是否存在
         if (contractInstance.isDataNameExist.call($scope.dataName)) {
             alert("The data name exist");
             return;
         }
+
         //解锁账户
         if (!unlockEtherAccount(getUserAddressByName($scope.selectedAccount), $scope.password)) return;
+
         //添加数据
         try {
             //添加数据源
-            contractInstance.createData($scope.dataName, $scope.introduction, {
+            contractInstance.createData($scope.dataName, $scope.introduction, $scope.capability, {
                 from: getUserAddressByName($scope.selectedAccount),
                 gas: 80000000
             });
@@ -100,6 +106,18 @@ angular.module("app", []).controller("provideData", function ($scope) {
     };
 
     /**
+     * 检查数据权限是否填写
+     */
+    $scope.checkCapabilityLegal = function () {
+        if (!$scope.capability) {
+            $scope.capError = "please input the capability!";
+            return false;
+        }
+        $scope.capError = "";
+        return true;
+    };
+
+    /**
      * 查询对应账户所提供的数据列表
      */
     $scope.getProvideData = function () {
@@ -128,4 +146,5 @@ angular.module("app", []).controller("provideData", function ($scope) {
         //设置默认名称
         if (provideNum > 0) $scope.selectedData = $scope.dataSets[0].dataName;
     };
+
 });

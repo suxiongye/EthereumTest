@@ -13,6 +13,9 @@ Choose the provider:
 DataName:
 <input ng-model="dataName" ng-change="checkDataNameExist()">{{nameError}}
 <hr/>
+Capability:
+<input ng-model="capability" ng-change="checkCapablityLegal()">{{capError}}
+<hr/>
 <div ng-repeat="type in types">
     Type Key {{$index}}:
     <input ng-model="type.key">

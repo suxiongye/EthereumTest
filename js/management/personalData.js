@@ -71,6 +71,7 @@ angular.module("app", []).controller("personalData", function ($scope) {
             //获取当前请求备注信息
             var requestContractInstance = requestContract.at(contractInstance.getDataRequest.call(data.dataName, accountAddress));
             data.information = requestContractInstance.information();
+            data.cap = $scope.getCapByData(data.dataName);
             //存入数据
             $scope.requestDataSet.push(data);
         }
@@ -87,5 +88,11 @@ angular.module("app", []).controller("personalData", function ($scope) {
 
     $scope.refresh = function () {
         $scope.getPersonalDataList();
+    };
+
+    $scope.getCapByData = function (dataName) {
+        //获取数据权限对象，call函数默认采用节点第一个账户调用，因此不建议用第一个账户创建数据
+        var dataAccessInstance = accessContract.at(contractInstance.getDataAccessByName.call(dataName));
+        return dataAccessInstance.getCapability.call().then(console.log);
     };
 });

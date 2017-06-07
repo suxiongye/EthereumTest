@@ -19,6 +19,7 @@
             ng-change="getDataRequestList()">
     </select>
 </div>
+<p>{{capability}}</p>
 <label>Requester List</label>
 <table>
     <thead>
@@ -51,9 +52,13 @@
 
 <button ng-click="refresh()">刷新</button>
 <hr/>
+<label>修改权限信息：</label>
+<input ng-model="newCap">
+<hr/>
 <label>Password:</label>
 <input ng-model="password" type="password">
-
+<hr/>
+<button ng-click="updateCap()">确认修改</button>
 </body>
 <script type="text/javascript" src="../../node_modules/angular/angular.js"></script>
 <script type="text/javascript" src="../../node_modules/bignumber.js/bignumber.min.js"></script>

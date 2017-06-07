@@ -75,6 +75,8 @@ angular.module("app", []).controller("provideCtrlData", function ($scope) {
             requester.control_disable = isDataAudited($scope.selectedData, requester.address);
             $scope.requesters.push(requester);
         }
+        //获取权限信息
+        $scope.getCapByData();
     };
 
     /**
@@ -89,6 +91,8 @@ angular.module("app", []).controller("provideCtrlData", function ($scope) {
      */
     $scope.$watch('$viewContentLoaded', function () {
         $scope.getProvideData();
+        //获取对应数据的权限信息
+        $scope.getCapByData();
     });
 
     /**
@@ -135,6 +139,12 @@ angular.module("app", []).controller("provideCtrlData", function ($scope) {
         catch (err) {
             console.log(err);
         }
+    };
+
+    $scope.getCapByData = function () {
+        //获取数据权限对象
+        var dataAccessInstance = accessContract.at(contractInstance.getDataAccessByName.call($scope.selectedData));
+        $scope.capability = dataAccessInstance.getCapability.call();
     };
 
 });
